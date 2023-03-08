@@ -23,6 +23,7 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -37,8 +38,10 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
-
-        BestScoreText.text = "Best Score : " + Scene1.Instance.playerName + " : 0";
+        Scene1.Instance.LoadBestScore();
+        BestScoreText.text = Scene1.Instance.BestScoreText;
+        
+        
     }
 
     private void Update()
@@ -47,6 +50,7 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                
                 m_Started = true;
                 float randomDirection = Random.Range(-1.0f, 1.0f);
                 Vector3 forceDir = new Vector3(randomDirection, 1, 0);
@@ -73,8 +77,17 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        int bestScoreNumber = Scene1.Instance.BestScorePoints;
+        if(bestScoreNumber < m_Points)
+        {
+            Scene1.Instance.BestScoreText = Scene1.Instance.playerName;
+            Scene1.Instance.BestScorePoints = m_Points;
+            Scene1.Instance.SaveBestScore();
+        }
+       
         m_GameOver = true;
         GameOverText.SetActive(true);
+        
     }
 
     
